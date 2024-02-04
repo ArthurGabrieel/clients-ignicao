@@ -42,7 +42,7 @@ class ProfilePage extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Cliente excluído com sucesso!'),
-                  backgroundColor: Colors.red,
+                  backgroundColor: Colors.green,
                 ),
               );
               Navigator.of(context).pop();

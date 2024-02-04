@@ -55,7 +55,7 @@ class SearchPage extends StatelessWidget {
                     state.message,
                     style: Theme.of(context).textTheme.labelMedium,
                   )
-                else if (state is ClientUpdated)
+                else if (state is ClientFound)
                   Card(
                     shadowColor: AppColors.shadowColor,
                     elevation: 10,

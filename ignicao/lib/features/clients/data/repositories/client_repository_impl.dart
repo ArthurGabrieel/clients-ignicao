@@ -42,41 +42,41 @@ class ClientRepositoryImpl implements ClientRepository {
   }
 
   @override
-  Future<Either<Failure, ClientOutputModel>> getClient(
+  Future<Either<Failure, ClientOutputModel?>> getClient(
       GetClientDto params) async {
     return _execute(() => clientDataSource.getClient(params));
   }
 
   @override
-  Future<Either<Failure, ClientOutputModel>> searchClient(
+  Future<Either<Failure, ClientOutputModel?>> searchClient(
       SearchClientDto params) async {
     return _execute(() => clientDataSource.searchClient(params));
   }
 
   @override
-  Future<Either<Failure, List<ClientOutputModel>>> getClients() async {
+  Future<Either<Failure, List<ClientOutputModel>?>> getClients() async {
     return _execute(() => clientDataSource.getClients());
   }
 
   @override
-  Future<Either<Failure, String>> loginClient(LoginDto params) async {
+  Future<Either<Failure, String?>> loginClient(LoginDto params) async {
     return _execute(() => clientDataSource.loginClient(params));
   }
 
   @override
-  Future<Either<Failure, ClientOutputModel>> registerClient(
+  Future<Either<Failure, ClientOutputModel?>> registerClient(
       RegisterDto params) async {
     return _execute(() => clientDataSource.registerClient(params));
   }
 
   @override
-  Future<Either<Failure, ClientOutputModel>> updateClient(
+  Future<Either<Failure, ClientOutputModel?>> updateClient(
       UpdateClientDto params) async {
     return _execute(() => clientDataSource.updateClient(params));
   }
 
   @override
-  Future<Either<Failure, ClientOutputModel>> updatePassword(
+  Future<Either<Failure, ClientOutputModel?>> updatePassword(
       UpdatePasswordDto params) async {
     return _execute(() => clientDataSource.updatePassword(params));
   }

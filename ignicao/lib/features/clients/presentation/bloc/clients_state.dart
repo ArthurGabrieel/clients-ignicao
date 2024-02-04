@@ -38,6 +38,15 @@ class ClientUpdated extends ClientsState {
   List<Object> get props => [client];
 }
 
+class ClientFound extends ClientsState {
+  ClientFound({required this.client});
+
+  final ClientOutputEntity client;
+
+  @override
+  List<Object> get props => [client];
+}
+
 class ClientDeleted extends ClientsState {}
 
 class Error extends ClientsState {

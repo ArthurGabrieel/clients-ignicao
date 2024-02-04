@@ -5,6 +5,8 @@ class ClientsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class Reset extends ClientsEvent {}
+
 class FetchClients extends ClientsEvent {}
 
 class AddClient extends ClientsEvent {

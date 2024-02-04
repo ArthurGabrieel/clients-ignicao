@@ -72,12 +72,14 @@ class _AuthenticatePageState extends State<AuthenticatePage> {
             }
 
             if (state is Error) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
+              Future.delayed(Duration.zero, () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              });
             }
 
             if (state is Logged) {

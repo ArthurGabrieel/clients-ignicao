@@ -31,6 +31,10 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
   final deleteClientUseCase = sl<DeleteClientUseCase>();
 
   ClientsBloc() : super(Empty()) {
+    on<Reset>((event, emit) {
+      emit(Empty());
+    });
+
     on<FetchClients>((event, emit) async {
       emit(Loading());
 
@@ -38,7 +42,7 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
 
       result.fold(
         (failure) => emit(Error(message: failure.props.first.toString())),
-        (clients) => emit(ClientsLoaded(clients: clients)),
+        (clients) => emit(ClientsLoaded(clients: clients!)),
       );
     });
 
@@ -49,7 +53,7 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
 
       result.fold(
         (failure) => emit(Error(message: failure.props.first.toString())),
-        (client) => emit(ClientLoaded(client: client)),
+        (client) => emit(ClientLoaded(client: client!)),
       );
     });
 
@@ -58,10 +62,14 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
 
       final result = await searchClientUseCase(event.dto);
 
-      result.fold(
-        (failure) => emit(Error(message: 'Cliente não encontrado')),
-        (client) => emit(ClientUpdated(client: client)),
-      );
+      try {
+        result.fold(
+          (failure) => emit(Error(message: failure.props.first.toString())),
+          (client) => emit(ClientFound(client: client!)),
+        );
+      } catch (e) {
+        emit(Error(message: 'Cliente não encontrado'));
+      }
     });
 
     on<UpdateClient>((event, emit) async {
@@ -71,7 +79,7 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
 
       result.fold(
         (failure) => emit(Error(message: failure.props.first.toString())),
-        (client) => emit(ClientLoaded(client: client)),
+        (client) => emit(ClientLoaded(client: client!)),
       );
     });
 
@@ -82,7 +90,7 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
 
       result.fold(
         (failure) => emit(Error(message: 'Senha incorreta')),
-        (client) => emit(ClientUpdated(client: client)),
+        (client) => emit(ClientUpdated(client: client!)),
       );
     });
 
@@ -93,7 +101,7 @@ class ClientsBloc extends Bloc<ClientsEvent, ClientsState> {
 
       result.fold(
         (failure) => emit(Error(message: failure.props.first.toString())),
-        (client) => emit(ClientLoaded(client: client)),
+        (client) => emit(ClientLoaded(client: client!)),
       );
     });
 

@@ -7,13 +7,13 @@ import '../../domain/entities/client_output.dart';
 import '../../domain/repositories/client_repository.dart';
 
 class UpdateClientUseCase
-    implements UseCase<ClientOutputEntity, UpdateClientDto> {
+    implements UseCase<ClientOutputEntity?, UpdateClientDto> {
   UpdateClientUseCase(this.repository);
 
   final ClientRepository repository;
 
   @override
-  Future<Either<Failure, ClientOutputEntity>> call(
+  Future<Either<Failure, ClientOutputEntity?>> call(
       UpdateClientDto params) async {
     return repository.updateClient(params);
   }

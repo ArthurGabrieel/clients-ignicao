@@ -26,13 +26,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       final result = await loginUseCase(event.dto);
 
-      result.fold(
-        (failure) => emit(Error(message: failure.props.first.toString())),
-        (token) {
-          secureStorage.saveToken(token);
-          emit(Logged(token: token));
-        },
-      );
+      try {
+        result.fold(
+          (failure) => emit(Error(message: failure.props.first.toString())),
+          (token) {
+            secureStorage.saveToken(token!);
+            emit(Logged(token: token));
+          },
+        );
+      } catch (_) {
+        emit(Error(message: 'Email ou senha inválidos'));
+      }
     });
 
     on<RegisterEvent>((event, emit) async {
@@ -42,8 +46,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       result.fold(
         (failure) => emit(Error(message: failure.props.first.toString())),
-        (output) {
-          emit(Registered());
+        (value) {
+          if (value != null) {
+            emit(Registered());
+          } else {
+            emit(Error(message: 'Email já cadastrado'));
+          }
         },
       );
     });

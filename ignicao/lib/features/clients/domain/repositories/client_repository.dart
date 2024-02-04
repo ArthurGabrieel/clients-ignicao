@@ -11,23 +11,23 @@ import '../dto/update_password_dto.dart';
 import '../entities/client_output.dart';
 
 abstract class ClientRepository {
-  Future<Either<Failure, ClientOutputEntity>> registerClient(
+  Future<Either<Failure, ClientOutputEntity?>> registerClient(
       RegisterDto params);
 
-  Future<Either<Failure, String>> loginClient(LoginDto params);
+  Future<Either<Failure, String?>> loginClient(LoginDto params);
 
-  Future<Either<Failure, ClientOutputEntity>> updateClient(
+  Future<Either<Failure, ClientOutputEntity?>> updateClient(
       UpdateClientDto params);
 
-  Future<Either<Failure, ClientOutputEntity>> updatePassword(
+  Future<Either<Failure, ClientOutputEntity?>> updatePassword(
       UpdatePasswordDto params);
 
-  Future<Either<Failure, ClientOutputEntity>> getClient(GetClientDto params);
+  Future<Either<Failure, ClientOutputEntity?>> getClient(GetClientDto params);
 
-  Future<Either<Failure, ClientOutputEntity>> searchClient(
+  Future<Either<Failure, ClientOutputEntity?>> searchClient(
       SearchClientDto params);
 
-  Future<Either<Failure, List<ClientOutputEntity>>> getClients();
+  Future<Either<Failure, List<ClientOutputEntity>?>> getClients();
 
   Future<Either<Failure, void>> deleteClient(DeleteClientDto params);
 }

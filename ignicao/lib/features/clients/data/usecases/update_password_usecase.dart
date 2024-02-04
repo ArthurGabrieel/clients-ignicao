@@ -7,13 +7,13 @@ import '../../domain/entities/client_output.dart';
 import '../../domain/repositories/client_repository.dart';
 
 class UpdatePasswordUseCase
-    implements UseCase<ClientOutputEntity, UpdatePasswordDto> {
+    implements UseCase<ClientOutputEntity?, UpdatePasswordDto> {
   UpdatePasswordUseCase(this.repository);
 
   final ClientRepository repository;
 
   @override
-  Future<Either<Failure, ClientOutputEntity>> call(
+  Future<Either<Failure, ClientOutputEntity?>> call(
       UpdatePasswordDto params) async {
     return repository.updatePassword(params);
   }

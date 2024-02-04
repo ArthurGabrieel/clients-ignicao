@@ -12,13 +12,13 @@ import '../../domain/dto/update_password_dto.dart';
 import '../models/client_output_model.dart';
 
 abstract class ClientDataSource {
-  Future<ClientOutputModel> registerClient(RegisterDto params);
-  Future<String> loginClient(LoginDto params);
-  Future<ClientOutputModel> updateClient(UpdateClientDto params);
-  Future<ClientOutputModel> updatePassword(UpdatePasswordDto params);
-  Future<ClientOutputModel> getClient(GetClientDto params);
-  Future<ClientOutputModel> searchClient(SearchClientDto params);
-  Future<List<ClientOutputModel>> getClients();
+  Future<ClientOutputModel?> registerClient(RegisterDto params);
+  Future<String?> loginClient(LoginDto params);
+  Future<ClientOutputModel?> updateClient(UpdateClientDto params);
+  Future<ClientOutputModel?> updatePassword(UpdatePasswordDto params);
+  Future<ClientOutputModel?> getClient(GetClientDto params);
+  Future<ClientOutputModel?> searchClient(SearchClientDto params);
+  Future<List<ClientOutputModel>?> getClients();
   Future<void> deleteClient(DeleteClientDto params);
 }
 
@@ -41,16 +41,18 @@ class ClientDataSourceImpl implements ClientDataSource {
     }
   }
 
-  Future<T> _handleRequest<T>(Future<T> Function() request) async {
+  Future<T?> _handleRequest<T>(Future<T> Function() request) async {
     try {
       await _setToken();
       return await request();
     } on InvalidTokenException {
       print('Error adding the token');
       rethrow;
-    } on DioException {
-      print('Error making the request');
-      rethrow;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 500) {
+        return null;
+      }
+      throw BadRequestException();
     }
   }
 
@@ -65,7 +67,7 @@ class ClientDataSourceImpl implements ClientDataSource {
   }
 
   @override
-  Future<ClientOutputModel> getClient(GetClientDto params) async {
+  Future<ClientOutputModel?> getClient(GetClientDto params) async {
     return _handleRequest(() async {
       final response = await dio.get('/${params.id}');
       if (response.statusCode == 200) {
@@ -78,7 +80,7 @@ class ClientDataSourceImpl implements ClientDataSource {
   }
 
   @override
-  Future<ClientOutputModel> searchClient(SearchClientDto params) async {
+  Future<ClientOutputModel?> searchClient(SearchClientDto params) async {
     return _handleRequest(() async {
       final response = await dio.get('/search/${params.email}');
       if (response.statusCode == 200) {
@@ -91,7 +93,7 @@ class ClientDataSourceImpl implements ClientDataSource {
   }
 
   @override
-  Future<List<ClientOutputModel>> getClients() async {
+  Future<List<ClientOutputModel>?> getClients() async {
     return _handleRequest(() async {
       final response = await dio.get('/');
       if (response.statusCode == 200) {
@@ -107,7 +109,7 @@ class ClientDataSourceImpl implements ClientDataSource {
   }
 
   @override
-  Future<String> loginClient(LoginDto params) async {
+  Future<String?> loginClient(LoginDto params) async {
     return _handleRequest(() async {
       final response = await dio.post('/login', data: params.toJson());
       if (response.statusCode == 200) {
@@ -119,7 +121,7 @@ class ClientDataSourceImpl implements ClientDataSource {
   }
 
   @override
-  Future<ClientOutputModel> registerClient(RegisterDto params) async {
+  Future<ClientOutputModel?> registerClient(RegisterDto params) async {
     return _handleRequest(() async {
       final response = await dio.post('/register', data: params.toJson());
       if (response.statusCode == 201) {
@@ -132,7 +134,7 @@ class ClientDataSourceImpl implements ClientDataSource {
   }
 
   @override
-  Future<ClientOutputModel> updateClient(UpdateClientDto params) async {
+  Future<ClientOutputModel?> updateClient(UpdateClientDto params) async {
     return _handleRequest(() async {
       final response = await dio.put('/${params.id}', data: params.toJson());
       if (response.statusCode == 200) {
@@ -145,7 +147,7 @@ class ClientDataSourceImpl implements ClientDataSource {
   }
 
   @override
-  Future<ClientOutputModel> updatePassword(UpdatePasswordDto params) async {
+  Future<ClientOutputModel?> updatePassword(UpdatePasswordDto params) async {
     return _handleRequest(() async {
       final response = await dio.patch('/${params.id}', data: params.toJson());
       if (response.statusCode == 200) {

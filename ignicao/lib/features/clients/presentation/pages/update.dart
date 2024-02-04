@@ -32,6 +32,7 @@ class _UpdatePageState extends State<UpdatePage> {
   @override
   void initState() {
     super.initState();
+    context.read<ClientsBloc>().add(Reset());
     getClient();
   }
 
@@ -78,74 +79,70 @@ class _UpdatePageState extends State<UpdatePage> {
             });
           }
           if (state is Error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-              ),
-            );
+            Future.delayed(const Duration(milliseconds: 500), () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            });
           }
-          if (state is ClientLoaded) {
-            return Padding(
-              padding: const EdgeInsets.all(26.0),
-              child: Column(
-                children: [
-                  const Text(
-                      'Preencha os campos abaixo para alterar a sua senha.'),
-                  const SizedBox(height: 20),
-                  Form(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.cardBackground,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                              color: AppColors.shadowColor,
-                              blurRadius: 20,
-                              offset: Offset(0, 10))
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          buildTextField(
-                              oldPasswordController, 'Senha atual', true),
-                          buildTextField(
-                              newPasswordController, 'Nova senha', true),
-                          buildTextField(confirmNewPasswordController,
-                              'Confirme a nova senha', true),
-                        ],
-                      ),
+          return Padding(
+            padding: const EdgeInsets.all(26.0),
+            child: Column(
+              children: [
+                const Text(
+                    'Preencha os campos abaixo para alterar a sua senha.'),
+                const SizedBox(height: 20),
+                Form(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.cardBackground,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: AppColors.shadowColor,
+                            blurRadius: 20,
+                            offset: Offset(0, 10))
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        buildTextField(
+                            oldPasswordController, 'Senha atual', true),
+                        buildTextField(
+                            newPasswordController, 'Nova senha', true),
+                        buildTextField(confirmNewPasswordController,
+                            'Confirme a nova senha', true),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 25),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(200, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                ),
+                const SizedBox(height: 25),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(200, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    onPressed: () {
-                      if (validateForm()) {
-                        final dto = UpdatePasswordDto(
-                          id: state.client.id,
-                          password: newPasswordController.text,
-                          oldPassword: oldPasswordController.text,
-                        );
-                        context
-                            .read<ClientsBloc>()
-                            .add(UpdatePassword(dto: dto));
-                      }
-                    },
-                    child: const Text('Atualizar'),
                   ),
-                ],
-              ),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.primary,
+                  onPressed: () {
+                    if (validateForm() && state is ClientFound) {
+                      final dto = UpdatePasswordDto(
+                        id: state.client.id,
+                        password: newPasswordController.text,
+                        oldPassword: oldPasswordController.text,
+                      );
+                      context.read<ClientsBloc>().add(UpdatePassword(dto: dto));
+                      oldPasswordController.clear();
+                      newPasswordController.clear();
+                      confirmNewPasswordController.clear();
+                    }
+                  },
+                  child: const Text('Atualizar'),
+                ),
+              ],
             ),
           );
         },

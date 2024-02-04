@@ -6,12 +6,12 @@ import '../../domain/entities/client_output.dart';
 import '../../domain/repositories/client_repository.dart';
 
 class GetAllClientUseCase
-    implements UseCase<List<ClientOutputEntity>, NoParams> {
+    implements UseCase<List<ClientOutputEntity>?, NoParams> {
   GetAllClientUseCase(this.repository);
   final ClientRepository repository;
 
   @override
-  Future<Either<Failure, List<ClientOutputEntity>>> call(
+  Future<Either<Failure, List<ClientOutputEntity>?>> call(
       NoParams params) async {
     return repository.getClients();
   }
