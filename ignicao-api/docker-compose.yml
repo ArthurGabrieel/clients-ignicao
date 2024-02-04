@@ -8,7 +8,7 @@ services:
     tty: true
     ports:
       - "5432:5432"
-    
+
     # Salvando dados do banco caso o container seja apagado
     volumes:
       - .docker/dbdata:/var/lib/postgresql/data
@@ -16,22 +16,3 @@ services:
     environment:
       - POSTGRES_PASSWORD=adm
       - POSTGRES_DB=ignicaodb
-
-  app:
-    build: .
-    container_name: nest-app
-    restart: always
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    command: sh -c "npm install && npm run start:dev"
-
-  prisma:
-    build: .
-    container_name: prisma
-    restart: always
-    depends_on:
-      - db
-    command: sh -c "npx prisma migrate dev"
-
